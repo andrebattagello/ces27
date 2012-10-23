@@ -1,0 +1,5 @@
+from django.core.signals import got_request_exception
+
+from contrib.errors.signals import LoggingExceptionHandler
+
+got_request_exception.connect(LoggingExceptionHandler.create_from_exception)

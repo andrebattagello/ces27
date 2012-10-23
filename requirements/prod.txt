@@ -1,0 +1,9 @@
+-r base.txt
+
+-e git+https://github.com/benoitc/gunicorn.git#egg=gunicorn
+psycopg2
+supervisor
+python-memcached
+
+boto
+-e hg+https://bitbucket.org/david/django-storages#egg=storages

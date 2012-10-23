@@ -1,0 +1,29 @@
+# m  h  dom mon dow user     command
+#
+##
+##DATABASE BACKUP
+#Every Day  at 4:30AM do a database backup (SQL Dump) in /home/db_backups/
+#Refer to deploy/README to known how to recover the db from a catastrophe
+30 4 * * * (su --session-command="pg_dumpall | gzip > {env.db_backup_root}db_$(date +\"\%b-\%d-\%Y_\%H-\%M\").gz" postgres;)
+#Every Monday at 4:15AM delete the 5 oldest backups
+#15 4 * * 1 (su --session-command="ls -t /home/db_backups/*.* | tail -n5 | xargs rm" postgres;)
+##
+##Expired sessions cleanup
+#Django does not cleanup automatically the table of sessions
+#Every Day at 5:00AM do a session cleanup
+0 5 * * * ({env.venv_root}bin/python {env.src_root}manage.py cleanup --settings=settings.prod;)
+#
+#Try to send reminders every minute
+#0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59 * * * * ({env.venv_root}bin/python {env.src_root}manage.py send_reminders --settings=settings.prod >> /dev/null 2>>/tmp/cron_errors.log;)
+#Try to send mails every minute
+#0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59 * * * * ({env.venv_root}bin/python {env.src_root}manage.py send_mail --settings=settings.prod >> /dev/null 2>>/tmp/cron_errors.log;)
+#
+# Insert Escolas, Cidades, Estados (it relly only needs to be executed once (on a new fresh DB))
+#12 04 * * * ({env.venv_root}bin/python {env.src_root}manage.py insert_escolas --settings=settings.prod > /tmp/cron.insert_escolas.log 2>/tmp/cron.insert_escolas.errors.log;)
+# rebuild_index (just on bootstrap of a new server)
+#31 05 * * * ({env.venv_root}bin/python {env.src_root}manage.py rebuild_index --traceback --remove --noinput --settings=settings.prod >> /tmp/cron.rebuild_index.log 2>>/tmp/cron.rebuild_index.errors.log;)
+
+#update search indexes everyday at strategic hours. Consider objects as new only after 6 hours since last update.
+#update indexes at 8AM every day
+#0 8 * * * ({env.venv_root}bin/python {env.src_root}manage.py update_index --age=6 --remove --settings=settings.prod >> /tmp/cron.update_index.log 2>>/tmp/cron.update_index.errors.log;)
+

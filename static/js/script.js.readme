@@ -1,0 +1,12 @@
+
+Script.js devera conter a logica concentrada da aplicacao.
+Nao eh ideal que script.js conheça peculiaridade do DOM de cada template do
+projeto. 
+
+Ou seja, aqui deverá estar a *lógica apenas* e *não os seletores dos elementos* 
+das várias páginas do projeto.
+
+Deixe para programar os seletores dentro do bloco *footer_js* presente em cada template.
+Dentro desse bloco (footer_js) você chama as funções de lógica programas aqui
+(e provavelmente estas funções estarão dentro do namespace global (object *CES*)).
+

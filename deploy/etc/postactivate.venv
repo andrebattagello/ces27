@@ -1,0 +1,5 @@
+#!/bin/bash
+# This hook is run after this virtualenv is activated.
+
+_SOURCEDIR=$(dirname "$BASH_SOURCE")
+python $_SOURCEDIR/../project/src/settings/secret.py
